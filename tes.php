@@ -11,9 +11,9 @@ $printer = new Printer($connector);
 try {
     $tux = EscposImage::load("image.png", false);
 // print_r($tux);
-    $printer->barcode('02-201010', Printer::BARCODE_CODE128);
+    // $printer->barcode('02-201010', Printer::BARCODE_CODE128);
     
-    print_r($tux);
+    // print_r($tux);
     // $printer -> text("Regular Tux (bit image).\n");
     // $printer -> feed();
     
