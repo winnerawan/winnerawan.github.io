@@ -1,0 +1,74 @@
+<html>
+<body>
+	<textarea id="printContent"></textarea>
+	<input type="submit" onclick="connectAndPrint()" value="Print"/>
+	<P>Type text into box and click on submit button.
+	<script>
+	var device;
+
+	function setup(device) {
+		return device.open()
+		.then(() => device.selectConfiguration(1))
+		.then(() => device.claimInterface(0))
+	}
+
+	function print() {
+		var cmds = esc + "@"; //Initializes the printer (ESC @)
+            cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
+            cmds += 'BEST DEAL STORES'; //text to print
+            cmds += newLine + newLine;
+            cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+            cmds += 'COOKIES                   5.00'; 
+            cmds += newLine;
+            cmds += 'MILK 65 Fl oz             3.78';
+            cmds += newLine + newLine;
+            cmds += 'SUBTOTAL                  8.78';
+            cmds += newLine;
+            cmds += 'TAX 5%                    0.44';
+            cmds += newLine;
+            cmds += 'TOTAL                     9.22';
+            cmds += newLine;
+            cmds += 'CASH TEND                10.00';
+            cmds += newLine;
+            cmds += 'CASH DUE                  0.78';
+            cmds += newLine + newLine;
+            cmds += esc + '!' + '\x18'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
+            cmds += '# ITEMS SOLD 2';
+            cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+            cmds += newLine + newLine;
+            cmds += '11/03/13  19:53:17';
+		var string = document.getElementById("printContent").value + "\n";
+		var encoder = new TextEncoder();
+		var data = encoder.encode(cmds);
+		device.transferOut(1, cmds)
+		.catch(error => { console.log(error); })
+	}
+
+	function connectAndPrint() {
+		if (device == null) {
+			navigator.usb.requestDevice({ filters: [{ vendorId: 1208 }] })
+			.then(selectedDevice => {
+				device = selectedDevice;
+				console.log(device);
+				return setup(device);
+			})
+			.then(() => print())
+			.catch(error => { console.log(error); })
+		}
+		else
+			print();
+	}
+
+	navigator.usb.getDevices()
+	.then(devices => {
+		if (devices.length > 0) {
+			device = devices[0];
+			return setup(device);
+		}
+	})
+	.catch(error => { console.log(error); });
+
+	</script>
+</body>
+</html>
+
