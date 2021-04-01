@@ -13,6 +13,9 @@
 	}
 
 	function print() {
+		var esc = '\x1B'; //ESC byte in hex notation
+        var newLine = '\x0A'; //LF byte in hex notation
+
 		var cmds = esc + "@"; //Initializes the printer (ESC @)
             cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
             cmds += 'BEST DEAL STORES'; //text to print
