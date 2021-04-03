@@ -240,7 +240,7 @@ abstract class EscposImage
      *  Raster format data, or NULL if no optimised renderer is available in
      *  this implementation.
      */
-    protected function getRasterFormatFromFile($filename = null)
+    public function getRasterFormatFromFile($filename = null)
     {
         // No optimised implementation to provide
         return null;
@@ -255,7 +255,7 @@ abstract class EscposImage
      *  Column format data as array, or NULL if optimised renderer isn't
      *  available in this implementation.
      */
-    protected function getColumnFormatFromFile($filename = null, $highDensityVertical = true)
+    public function getColumnFormatFromFile($filename = null, $highDensityVertical = true)
     {
         // No optimised implementation to provide
         return null;
@@ -269,7 +269,7 @@ abstract class EscposImage
      * @return string
      *  Raster format data
      */
-    private function getRasterFormat()
+    public function getRasterFormat()
     {
         /* Loop through and convert format */
         $widthPixels = $this -> getWidth();
