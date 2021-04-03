@@ -21,7 +21,7 @@ class GdEscposImage extends EscposImage
 {
 
     public function getTest() {
-        return print_r("AA");
+        // return print_r("AA");
     }
     /**
      * Load an image from disk, into memory, using GD.
@@ -63,7 +63,7 @@ class GdEscposImage extends EscposImage
     public function readImageFromGdResource($im)
     {
         if (!is_resource($im)) {
-            print_r($im);
+            // print_r($im);
             throw new Exception("Failed to load image.");
         } elseif (!EscposImage::isGdLoaded()) {
             throw new Exception(__FUNCTION__ . " requires 'gd' extension.");
@@ -83,7 +83,7 @@ class GdEscposImage extends EscposImage
                 $imgData[$y * $imgWidth + $x] = $black;
             }
         }
-        print_r($imgData);
+        // print_r($imgData);
         $this -> setImgWidth($imgWidth);
         $this -> setImgHeight($imgHeight);
         $this -> setImgData($imgData);

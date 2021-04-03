@@ -457,7 +457,7 @@ class Printer
     {
         self::validateInteger($size, 0, 3, __FUNCTION__);
         $rasterData = $img -> toRasterFormat();
-        print_r($rasterData);
+        // print_r($rasterData);
         $header = Printer::dataHeader([$img -> getWidthBytes(), $img -> getHeight()], true);
         $this -> connector -> write(self::GS . "v0" . chr($size) . $header);
         $this -> connector -> write($rasterData);
@@ -618,6 +618,7 @@ class Printer
         $colors = '1';
         $xm = (($size & self::IMG_DOUBLE_WIDTH) == Printer::IMG_DOUBLE_WIDTH) ? chr(2) : chr(1);
         $ym = (($size & self::IMG_DOUBLE_HEIGHT) == Printer::IMG_DOUBLE_HEIGHT) ? chr(2) : chr(1);
+        // print_r($rasterData);
         $header = $tone . $xm . $ym . $colors . $imgHeader;
         $this -> wrapperSendGraphicsData('0', 'p', $header . $rasterData);
         $this -> wrapperSendGraphicsData('0', '2');

@@ -1,6 +1,6 @@
 <?php
 /* Example print-outs using the older bit image print command */
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../../../../vendor/autoload.php';
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
@@ -9,7 +9,7 @@ $connector = new FilePrintConnector("php://stdout");
 $printer = new Printer($connector);
 
 try {
-    $tux = EscposImage::load("resources/tux.png", false);
+    $tux = EscposImage::load("/Users/winnerawan/Downloads/image.png", false);
 
     $printer -> text("These example images are printed with the older\nbit image print command. You should only use\n\$p -> bitImage() if \$p -> graphics() does not\nwork on your printer.\n\n");
     

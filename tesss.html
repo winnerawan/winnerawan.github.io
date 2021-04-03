@@ -68,7 +68,7 @@
             cmds += newLine + newLine;
 		var string = document.getElementById("printContent").value + "\n";
 		var encoder = new TextEncoder();
-		var data = encoder.encode(cmds);
+		var data = encoder.encode("intent:base64,G0AbMxBGYWlsZWQgdG8gbG9hZCBpbWFnZS4KHVZBAw==#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;%");
 		console.log(data);
 		device.transferOut(1, data)
 		.catch(error => { console.log(error); })
