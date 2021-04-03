@@ -23,13 +23,13 @@
             cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
             cmds += 'COOKIES                   5.00'; 
             cmds += newLine;
-            cmds += esc + '\x34'+'SUSU 65 Fl oz             3.78'+esc +"\x35";
+            cmds += esc + '\x34'+'SUSU 65 Fl oz             3.78';
             cmds += newLine + newLine;
             cmds += 'SUBTOTAL                  8.78';
             cmds += newLine;
             cmds += 'TAX 5%                    0.44';
             cmds += newLine;
-            cmds += 'TOTAL                     9.22';
+            cmds += esc + '\x45' + 'TOTAL                     9.22';
             cmds += newLine;
             cmds += 'CASH TEND                10.00';
             cmds += newLine;
