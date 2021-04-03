@@ -69,7 +69,7 @@
 		var string = document.getElementById("printContent").value + "\n";
 		var encoder = new TextEncoder();
 		var data = encoder.encode(cmds);
-		coonsole.log(data);
+		console.log(data);
 		device.transferOut(1, data)
 		.catch(error => { console.log(error); })
 	}
