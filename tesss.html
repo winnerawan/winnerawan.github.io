@@ -13,45 +13,69 @@
 	}
 
 	function print() {
-		//Set content to print...
-            //Create ESP/POS commands for sample label
-            var esc = '\x1B'; //ESC byte in hex notation
-            var newLine = '\x0A'; //LF byte in hex notation
-        
-            var cmds = esc + "@"; //Initializes the printer (ESC @)
-            cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
-            cmds += 'BEST DEAL STORES'; //text to print
+		var esc = '\x1B'; //ESC byte in hex notation
+        var newLine = '\x0A'; //LF byte in hex notation
+
+		var cmds = esc + "@"; //Initializes the printer (ESC @)
+			cmds += esc + '!' + '\x61' + '\x00';
+            cmds += esc + '!' + '\x00'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
+            cmds += 'FAKTUR PENJUALAN'; //text to print
             cmds += newLine + newLine;
-            cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+            cmds += esc + '!' + '\x61' + '\x00';
+            cmds += '-------LOGO-------'
+            cmds += newLine + newLine;
+            cmds += esc + '\x61' + '\x00';
+            cmds += 'CV. MAJU MUNDUR JAYA'; //text to print
+            cmds += newLine;
+            cmds += esc + '\x61' + '\x00';
+            cmds += '12.123.456.0.789.000'; //text to print
+            cmds += newLine;
+            cmds += esc + '\x2D' + '\x00';
+            cmds += 'JALAN-JALAN TIMUR, NO 0 JAKARTA'; //text to print
+            cmds += newLine;
+            cmds += esc + '\x2D' + '\x00';
+            cmds += '087123145678'; //text to print
+            cmds += newLine;
+            cmds += esc + '!' + '\x61' + '\x00';
+            cmds += '_______________________________'; //text to print
+            cmds += esc '\x61' + '\x03';
+            cmds += esc '\x45'; //Character font A selected (ESC ! 0)
             cmds += 'COOKIES                   5.00'; 
             cmds += newLine;
-            cmds += 'MILK 65 Fl oz             3.78';
-            cmds += newLine + newLine;
+            cmds += esc + '!' + '\x61' + '\x03';
+            cmds += 'SUSU 65 Fl oz             3.78';
+            cmds += newLine;
+            cmds += esc + '!' + '\x61' + '\x03';
             cmds += 'SUBTOTAL                  8.78';
             cmds += newLine;
-            cmds += 'TAX 5%                    0.44';
+            cmds += esc + '!' + '\x61' + '\x03';
+            cmds += 'DISCOUNT                  0.44';
             cmds += newLine;
+            cmds += esc + '!' + '\x61' + '\x03';
+            cmds += esc  + '!' +  '\x45';
             cmds += 'TOTAL                     9.22';
             cmds += newLine;
+            cmds += esc + '!' + '\x61' + '\x03';
             cmds += 'CASH TEND                10.00';
             cmds += newLine;
+            cmds += esc + '!' + '\x61' + '\x03';
             cmds += 'CASH DUE                  0.78';
             cmds += newLine + newLine;
-            cmds += esc + '!' + '\x18'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
             cmds += '# ITEMS SOLD 2';
             cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
             cmds += newLine + newLine;
-            cmds += '11/03/13  19:53:17';
-
-		// var string = document.getElementById("printContent").value + "\n";
+            cmds += '11/03/13  19:53:17'
+            cmds += newLine + newLine;
+		var string = document.getElementById("printContent").value + "\n";
 		var encoder = new TextEncoder();
 		var data = encoder.encode(cmds);
-		console.log(data);
+		coonsole.log(data);
 		device.transferOut(1, data)
 		.catch(error => { console.log(error); })
 	}
 
 	function connectAndPrint() {
+		print();
 		if (device == null) {
 			navigator.usb.requestDevice({ filters: [{ vendorId: 1208 }] })
 			.then(selectedDevice => {
