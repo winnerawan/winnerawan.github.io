@@ -24,22 +24,22 @@
             cmds += esc + '!' + '\x61' + '\x00';
             cmds += '-------LOGO-------'
             cmds += newLine + newLine;
-            cmds += esc + '!' + '\x61' + '\x00';
+            cmds += esc + '\x61' + '\x00';
             cmds += 'CV. MAJU MUNDUR JAYA'; //text to print
             cmds += newLine;
-            cmds += esc + '!' + '\x61' + '\x00';
+            cmds += esc + '\x61' + '\x00';
             cmds += '12.123.456.0.789.000'; //text to print
             cmds += newLine;
-            cmds += esc + '!' + '\x61' + '\x00';
+            cmds += esc + '\x2D' + '\x00';
             cmds += 'JALAN-JALAN TIMUR, NO 0 JAKARTA'; //text to print
             cmds += newLine;
-            cmds += esc + '!' + '\x61' + '\x00';
+            cmds += esc + '\x2D' + '\x00';
             cmds += '087123145678'; //text to print
             cmds += newLine;
             cmds += esc + '!' + '\x61' + '\x00';
             cmds += '_______________________________'; //text to print
-            cmds += esc + '!' + '\x61' + '\x03';
-            cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+            cmds += esc '\x61' + '\x03';
+            cmds += esc '\x45'; //Character font A selected (ESC ! 0)
             cmds += 'COOKIES                   5.00'; 
             cmds += newLine;
             cmds += esc + '!' + '\x61' + '\x03';
@@ -69,6 +69,7 @@
 		var string = document.getElementById("printContent").value + "\n";
 		var encoder = new TextEncoder();
 		var data = encoder.encode(cmds);
+		coonsole.log(data);
 		device.transferOut(1, data)
 		.catch(error => { console.log(error); })
 	}
