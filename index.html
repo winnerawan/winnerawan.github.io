@@ -1,96 +1,27 @@
 <html>
 <body>
-	<textarea id="printContent"></textarea>
 	<input type="submit" onclick="connectAndPrint()" value="Print"/>
-	<P>Type text into box and click on submit button.
 	<script>
 	var device;
 
-	const ESC_INIT = [0x1b, 0x40];
-const ESC_BIT_IMAGE = [0x1b, 0x2a]
-const DOTS_DENSITY = 24
-const LUMINANCE = {
-    RED: 0.299,
-    GREEN: 0.587,
-    BLUE: 0.114
-}
-const LINE_FEED = 0x0a;
-
-function calculateLuminance(pixel) {
-    return LUMINANCE.RED * pixel[0] + LUMINANCE.GREEN * pixel[1] + LUMINANCE.BLUE * pixel[2]
-}
-
-function calculateSlice(x, y, image) {
-    const threshold = 127;
-    let slice = 0;
-    
-    for (let bit = 0; bit < 8; bit++) {
-        if ((y + bit) >= image.length)
-            continue;
-
-        luminance = calculateLuminance(image[y + bit][x])
-
-        slice |= (luminance < threshold ? 1 : 0) << 7 - bit
-    }
-
-    return slice;
-}
-
-function collectStripe(x, y, image) {
-    let slices = [];
-    let z = y + DOTS_DENSITY;
-
-    let i = 0
-    while (y < z && i < 3){
-      slices.push(calculateSlice(x, y, image));
-
-      y += 8
-    }
-
-    return slices;
-}
-
-function manipulateImage(image) {
-    let data = [];
-    const imageWidth = image[0].length;
-
-    for (let y = 0; y < image.length; y += DOTS_DENSITY){
-        data.push(...ESC_BIT_IMAGE, 33, (0x00ff & imageWidth), (0xff00 & imageWidth) >> 8);
-
-        for (let x = 0; x < imageWidth; x++) {
-            data.push(...collectStripe(x, y, image));
-        }
-
-        data.push(LINE_FEED);
-    }
-
-    return data;
-}
-
-function printImage(image) {
-    let transformedImage = [];
-
-    transformedImage.push(...ESC_INIT);
-
-    transformedImage.push(...manipulateImage(image));
-
-    return new Uint8Array(transformedImage);
-}
 	function setup(device) {
 		return device.open()
 		.then(() => device.selectConfiguration(1))
 		.then(() => device.claimInterface(0))
 	}
 
-	function print() {
-		var string = document.getElementById("printContent").value + "\n";
-		var encoder = new TextEncoder();
-		var data = encoder.encode(string);
+	function print(rawData) {
+		
+		var data = Uint8Array.from(atob(rawData), c => c.charCodeAt(0))
+
+		console.log(data);
+		console.log(rawData);
 		device.transferOut(1, data)
 		.catch(error => { console.log(error); })
 	}
 
 	function connectAndPrint() {
+		var rawData = "G0AbTQEdV0AAG2EBRkFLVFVSIFBFTkpVQUxBTgodV0AAG2EBGzMQGyoAgAAAAAAAAAAAAAEBAwMHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcDAwEAAAAAAAAAAAobKgCAAAAAAw8/Pvjw4MCAgQEBAQEBAQEBAQEBAQEBAQAAAQEBAQAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBgYDA4OB4fD8PBwEAChsqAIAAH////4AAAAAAAACAgICAgMD/////wICAgICAAAD/////AAAAID8/HwAAP39/fygA/////wAAAA8fPz95cHBwcHB/Pz8fAAAHDx8/Pzh4eHAAAAC//78fAAD/////cHAAAA8fPz9/dnJ2cn5+Ph4eBgAA////AAAAAAAAAP///z8KGyoAgAAA4PD+fg8HAwEAAAAAAAAAAODg4OAAAAAAAAAAAODg4OAAAAAA4ODgAADA4ODgQADg4ODgAAAAAMDA4OBgYGBg4ODg4MAAAODg4ODgAAAAAAAAAODg4OAAAMDg4OBgYCAAgMDg4OBgYGBgYGDgwMAAAADg4OAAAAABAw8//vjwgAobKgCAAAAAAAAAgMDA4PBweDg8PBgcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwYHDg4eHjw8ODAgAAAAAAAChsqAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKGzIKG2EBHVdAAENWLiBCVU1JIFRFTEFEQU4KG2EBOTQuMTk0Ljc2MC44LTY0Ny4wMDAKG2EBSkwuIEFMVU4tQUxVTiBUSU1VUiwgTk8gNywgUE9OT1JPR08KG2EBMDgxIDMzNSA3ODkgOTk1LzA4MjIgMzQ4NCA1NzUzCh1WQQM=";
 		if (device == null) {
 			navigator.usb.requestDevice({ filters: [{ vendorId: 1208 }] })
 			.then(selectedDevice => {
@@ -98,11 +29,11 @@ function printImage(image) {
 				console.log(device);
 				return setup(device);
 			})
-			.then(() => print())
+			.then(() => print(rawData))
 			.catch(error => { console.log(error); })
 		}
 		else
-			print();
+			print(rawData);
 	}
 
 	navigator.usb.getDevices()
@@ -117,4 +48,3 @@ function printImage(image) {
 	</script>
 </body>
 </html>
-
